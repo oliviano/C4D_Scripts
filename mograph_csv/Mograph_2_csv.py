@@ -11,15 +11,15 @@ from c4d.modules import mograph as mo
 #Preset / Hardcoded file path
 #file_path = c4d.documents.GetActiveDocument().GetDocumentPath() + "/mograph_data.csv"
 
-# User data file path
-file_path = op[c4d.ID_USERDATA,3]
-
 def write_data_to_csv(file_name, data):
     with open(file_name, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(data)
 
 def export_mograph_data(cloner):
+    # User data file path
+    file_path = op[c4d.ID_USERDATA,3]
+
     # Get the Cloner object
     # cloner = op[c4d.ID_USERDATA,2]
 
@@ -44,11 +44,11 @@ def export_mograph_data(cloner):
     data = []
     data.append(["i", "position.x", "position.y", "position.z", "rotation.x", "rotation.y", "rotation.z", "scale.x", "scale.y", "scale.z", "color.x", "color.y", "color.z"])
     for i in range(md.GetCount()):
-
         # positions
         position = clones_matrix[i].off
+        #print(position)
 
-        # rotations 
+        # rotations
         myrot = c4d.utils.MatrixToHPB(clones_matrix[i],9) # we have to play with rotation order, check SDK ( xyz is int 5, HPB is 9)
         myRx = c4d.utils.RadToDeg(myrot.x)
         myRy = c4d.utils.RadToDeg(myrot.y)
@@ -60,7 +60,7 @@ def export_mograph_data(cloner):
         sy = clones_matrix[i].GetScale().y # Get scale y
         sz = clones_matrix[i].GetScale().z # Get scale z
         #print(sx, sy, sz)
-        
+
         # color
         color = clones_colors[i]
 
@@ -73,9 +73,10 @@ def export_mograph_data(cloner):
     #print("some rouding error on the scale exports")
 
 def main():
+
     # Get the Cloner object
     cloner = op[c4d.ID_USERDATA,2]
-    
+
     # Get the state of the button
     button_state = op[c4d.ID_USERDATA,6]
 
